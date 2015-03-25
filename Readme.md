@@ -1,4 +1,12 @@
-* Player 1 gets 'X'
-* Player 2 gets 'O'
-* Start with Human vs Human
-* Extend to AI
+* __Instructions to Run__
+  * `ruby app.rb` - From the repo directory 
+  * Select Game Mode
+  * Mode-0 Human vs Human is currently supported
+  * Select Your moves by entering a1, b3 etc
+```
+   1  2  3
+ A -  -  -
+ B -  -  -
+ C -  -  -
+ ```
+
