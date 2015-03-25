@@ -12,7 +12,7 @@ module TicTac
     def submit_move(player, move)
       move.chomp!
       if move =~ /[ABCabc][123]/ and @game_board[getMap(move)] == '-'
-        @game_board[getMap(move)] = player.marker
+        @game_board[getMap(move)] = player.name
         puts "Player #{player.name} submitted move #{move}"
       else
         puts "Invalid Move. Player #{player.name} Enter move again"

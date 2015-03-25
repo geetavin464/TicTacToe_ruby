@@ -7,12 +7,14 @@ module TicTac
     def initialize
       @state = :started
       @winner = nil
+      @mode = 0
       @board = Board.new
-      @p1 = Player.new(name="1", is_human=true, marker = 'X')
-      @p2 = Player.new(name="2", is_human=true, marker = 'O')
+      @p1 = Player.new(name="X", is_human=true)
+      @p2 = Player.new(name="O", is_human=true)
     end
 
     def play
+      @board.print_board
       while @state == :started
         player_turn(@p1)
         player_turn(@p2)
@@ -38,6 +40,10 @@ module TicTac
       end
     end
 
+    def minmax(game)
+
+    end
+
     def print_result
       if winner
         puts "Player #{winner.name} wins"
@@ -50,6 +56,7 @@ module TicTac
     def self.present_game_modes
       puts "For Human vs Human select mode 0\nFor Human vs AI select mode 1\nFor AI vs Human select mode3\n"
       puts "Please enter your game mode"
+      @mode = gets
     end
 
     def self.present_title
