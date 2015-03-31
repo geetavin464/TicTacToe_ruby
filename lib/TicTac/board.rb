@@ -3,40 +3,49 @@ require 'pry'
 module TicTac
   WINNING_COMBINATIONS = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
   class Board
-    attr_accessor :game_board
+    attr_accessor :game_board, :state, :winner
 
     def initialize
       @game_board = "---------"
+      @state = :started
     end
 
     def submit_move(player, move)
       move.chomp!
-      if move =~ /[ABCabc][123]/ and @game_board[getMap(move)] == '-'
-        @game_board[getMap(move)] = player.name
-        puts "Player #{player.name} submitted move #{move}"
+      if valid_move(move)
+        accept_move(player,move)
       else
-        puts "Invalid Move. Player #{player.name} Enter move again"
-        move = gets
-        submit_move(player,move)
+        request_valid_move(player,move)
       end
+      print_board
+      change_state(player)
     end
 
-    def game_over?
-      !@game_board.include?('-')
+    def game_over
+      !game_board.include?('-')
     end
 
-    def game_won?
+    def game_won(player)
       WINNING_COMBINATIONS.each do |alignment|
-        return true if all_equal?(@game_board[alignment[0]], @game_board[alignment[1]], @game_board[alignment[2]])
+        return true if all_equal?(game_board[alignment[0]], game_board[alignment[1]], game_board[alignment[2]], player.name)
       end
       return false
     end
 
+    def change_state(player)
+      if game_over && game_won(player)
+        state = :finished
+        winner = player
+      elsif game_over && !game_won
+        state = :finished
+      end
+    end
+
     def print_board
       puts "   1  2  3"
-      puts " A #{@game_board[0]}  #{@game_board[1]}  #{@game_board[2]}"
-      puts " B #{@game_board[3]}  #{@game_board[4]}  #{@game_board[5]}"
-      puts " C #{@game_board[6]}  #{@game_board[7]}  #{@game_board[8]}"
+      puts " A #{game_board[0]}  #{game_board[1]}  #{game_board[2]}"
+      puts " B #{game_board[3]}  #{game_board[4]}  #{game_board[5]}"
+      puts " C #{game_board[6]}  #{game_board[7]}  #{game_board[8]}"
     end
 
   private
@@ -56,6 +65,21 @@ module TicTac
 
     def all_equal?(*elements)
       elements.all?{|x| x == elements.first && x != '-' }
+    end
+
+    def valid_move(move)
+      move =~ /[ABCabc][123]/ and game_board[getMap(move)] == '-'
+    end
+
+    def request_valid_move(player,move)
+      puts "Invalid Move. Player #{player.name} Enter move again"
+      move = gets
+      submit_move(player,move)
+    end
+
+    def accept_move(player,move)
+      game_board[getMap(move)] = player.name
+      puts "Player #{player.name} submitted move #{move}"
     end
 
   end

@@ -1,47 +1,37 @@
 require 'pry'
+require 'forwardable'
 module TicTac
   class Game
-
-    attr_accessor :state, :winner
+    extend Forwardable
+    attr_accessor :winner, :mode
 
     def initialize
-      @state = :started
-      @winner = nil
       @mode = 0
       @board = Board.new
-      @p1 = Player.new(name="X", is_human=true)
-      @p2 = Player.new(name="O", is_human=true)
+      add_players
+    end
+
+    def add_players
+      case mode
+      when 0
+        @player = Human.new(name="X")
+        @opponent = Human.new(name="O")
+      when 1
+        @player = Human.new(name="X")
+        @opponent = AI.new(name="O")
+      when 2
+        @player = AI.new(name="X")
+        @opponent = Human.new(name="O")
+      end
     end
 
     def play
       @board.print_board
-      while @state == :started
-        player_turn(@p1)
-        player_turn(@p2)
+      while @board.state == :started
+        @player.play_turn(self, @board)
+        @opponent.play_turn(self, @board) unless @board.state == :finished
       end
       print_result
-    end
-
-    def player_turn(player)
-      return if @state == :finished
-      player.prompt
-      move = gets
-      @board.submit_move(player,move)
-      @board.print_board
-      change_state(@board.game_over?, @board.game_won?, player)
-    end
-
-    def change_state(game_over, game_won, player)
-      if game_over && game_won
-        @state = :finished
-        @winner = player
-      elsif game_over && !game_won
-        @state = :finished
-      end
-    end
-
-    def minmax(game)
-
     end
 
     def print_result
@@ -54,7 +44,7 @@ module TicTac
     end
 
     def self.present_game_modes
-      puts "For Human vs Human select mode 0\nFor Human vs AI select mode 1\nFor AI vs Human select mode3\n"
+      puts "For Human vs Human select mode 0\nFor Human vs AI select mode 1\nFor AI vs Human select mode 2\n"
       puts "Please enter your game mode"
       @mode = gets
     end
