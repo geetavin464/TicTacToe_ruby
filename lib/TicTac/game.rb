@@ -3,7 +3,7 @@ require 'forwardable'
 module TicTac
   class Game
     extend Forwardable
-    attr_accessor :winner, :mode
+    attr_accessor :mode
 
     def initialize
       @mode = 0
@@ -27,7 +27,7 @@ module TicTac
 
     def play
       @board.print_board
-      while @board.state == :started
+      until @board.state == :finished
         @player.play_turn(self, @board)
         @opponent.play_turn(self, @board) unless @board.state == :finished
       end
@@ -35,8 +35,8 @@ module TicTac
     end
 
     def print_result
-      if winner
-        puts "Player #{winner.name} wins"
+      if @board.winner
+        puts "Player #{@board.winner.name} wins"
       else
         puts "Its a draw"
       end

@@ -33,12 +33,8 @@ module TicTac
     end
 
     def change_state(player)
-      if game_over && game_won(player)
-        state = :finished
-        winner = player
-      elsif game_over && !game_won
-        state = :finished
-      end
+      state = :finished  if (game_over || game_won(player))
+      winner = player if game_won(player)
     end
 
     def print_board
