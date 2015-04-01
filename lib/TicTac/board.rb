@@ -8,6 +8,7 @@ module TicTac
     def initialize
       @game_board = "---------"
       @state = :started
+      @winner = nil
     end
 
     def submit_move(player, move)
@@ -33,8 +34,8 @@ module TicTac
     end
 
     def change_state(player)
-      state = :finished  if (game_over || game_won(player))
-      winner = player if game_won(player)
+      @state = :finished  if (game_over || game_won(player))
+      @winner = player if game_won(player)
     end
 
     def print_board

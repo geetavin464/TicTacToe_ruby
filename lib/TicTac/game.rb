@@ -1,18 +1,22 @@
 require 'pry'
-require 'forwardable'
 module TicTac
   class Game
-    extend Forwardable
-    attr_accessor :mode
+    attr_accessor :mode, :board
 
     def initialize
-      @mode = 0
+      present_game_modes
       @board = Board.new
       add_players
     end
 
+    def present_game_modes
+      puts "For Human vs Human select mode 0\nFor Human vs AI select mode 1\nFor AI vs Human select mode 2\n"
+      puts "Please enter your game mode"
+      @mode = gets.chomp
+    end
+
     def add_players
-      case mode
+      case mode.to_i
       when 0
         @player = Human.new(name="X")
         @opponent = Human.new(name="O")
@@ -26,8 +30,8 @@ module TicTac
     end
 
     def play
-      @board.print_board
-      until @board.state == :finished
+      board.print_board
+      until board.state == :finished
         @player.play_turn(self, @board)
         @opponent.play_turn(self, @board) unless @board.state == :finished
       end
@@ -41,12 +45,6 @@ module TicTac
         puts "Its a draw"
       end
       puts "Game Over!"
-    end
-
-    def self.present_game_modes
-      puts "For Human vs Human select mode 0\nFor Human vs AI select mode 1\nFor AI vs Human select mode 2\n"
-      puts "Please enter your game mode"
-      @mode = gets
     end
 
     def self.present_title
