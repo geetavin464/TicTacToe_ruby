@@ -4,9 +4,27 @@ module TicTac
     attr_accessor :mode, :board
 
     def initialize
+      present_title
       present_game_modes
       @board = Board.new
       add_players
+    end
+
+    def play
+      board.print_board
+      until board.state == :finished
+        @player.play_turn(self, @board)
+        @opponent.play_turn(self, @board) unless @board.state == :finished
+      end
+      print_result
+    end
+
+private
+
+    def present_title
+      puts "*********"
+      puts "TicTacToe"
+      puts "*********"
     end
 
     def present_game_modes
@@ -29,15 +47,6 @@ module TicTac
       end
     end
 
-    def play
-      board.print_board
-      until board.state == :finished
-        @player.play_turn(self, @board)
-        @opponent.play_turn(self, @board) unless @board.state == :finished
-      end
-      print_result
-    end
-
     def print_result
       if @board.winner
         puts "Player #{@board.winner.name} wins"
@@ -45,12 +54,6 @@ module TicTac
         puts "Its a draw"
       end
       puts "Game Over!"
-    end
-
-    def self.present_title
-      puts "*********"
-      puts "TicTacToe"
-      puts "*********"
     end
 
   end
