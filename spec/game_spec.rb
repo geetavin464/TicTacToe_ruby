@@ -1,4 +1,3 @@
-# require 'spec_helper'
 require 'tictac'
 
 describe "game" do 
@@ -20,8 +19,5 @@ describe "game" do
     expect(game.mode.to_i).to be < 3
     expect(game.mode.to_i).to be >=0
   end
-
-  it ""
-
   
 end

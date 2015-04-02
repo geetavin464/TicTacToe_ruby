@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'tictac'
 
 describe 'player' do
-  
-  it "should prompt" do
-    
+  let(:player) {Player.new("X")}
+  it "should respond to name" do
+    expect(:player).to respond_to :name
   end
 
 end

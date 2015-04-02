@@ -11,6 +11,13 @@ module TicTac
       @winner = nil
     end
 
+    def print_board
+      puts "   1  2  3"
+      puts " A #{game_board[0]}  #{game_board[1]}  #{game_board[2]}"
+      puts " B #{game_board[3]}  #{game_board[4]}  #{game_board[5]}"
+      puts " C #{game_board[6]}  #{game_board[7]}  #{game_board[8]}"
+    end
+
     def submit_move(player, move)
       move.chomp!
       if valid_move(move)
@@ -20,29 +27,6 @@ module TicTac
       end
       print_board
       change_state(player)
-    end
-
-    def game_over
-      !game_board.include?('-')
-    end
-
-    def game_won(player)
-      WINNING_COMBINATIONS.each do |alignment|
-        return true if all_equal?(game_board[alignment[0]], game_board[alignment[1]], game_board[alignment[2]], player.name)
-      end
-      return false
-    end
-
-    def change_state(player)
-      @state = :finished  if (game_over || game_won(player))
-      @winner = player if game_won(player)
-    end
-
-    def print_board
-      puts "   1  2  3"
-      puts " A #{game_board[0]}  #{game_board[1]}  #{game_board[2]}"
-      puts " B #{game_board[3]}  #{game_board[4]}  #{game_board[5]}"
-      puts " C #{game_board[6]}  #{game_board[7]}  #{game_board[8]}"
     end
 
   private
@@ -77,6 +61,22 @@ module TicTac
     def accept_move(player,move)
       game_board[getMap(move)] = player.name
       puts "Player #{player.name} submitted move #{move}"
+    end
+
+    def change_state(player)
+      @state = :finished  if (game_over || game_won(player))
+      @winner = player if game_won(player)
+    end
+
+    def game_over
+      !game_board.include?('-')
+    end
+
+    def game_won(player)
+      WINNING_COMBINATIONS.each do |alignment|
+        return true if all_equal?(game_board[alignment[0]], game_board[alignment[1]], game_board[alignment[2]], player.name)
+      end
+      return false
     end
 
   end
