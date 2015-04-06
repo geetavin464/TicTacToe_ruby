@@ -30,7 +30,13 @@ private
     def present_game_modes
       puts "For Human vs Human select mode 0\nFor Human vs AI select mode 1\nFor AI vs Human select mode 2\n"
       puts "Please enter your game mode"
-      @mode = gets.chomp
+      begin
+        @mode = gets.chomp
+        raise "Invalid Mode" unless [0,1,2].include?(@mode.to_i)
+      rescue
+        puts "Invalid Mode. Enter again."
+        present_game_modes        
+      end
     end
 
     def add_players

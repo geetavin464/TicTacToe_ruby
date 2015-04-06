@@ -19,14 +19,15 @@ module TicTac
     end
 
     def submit_move(player, move)
-      move.chomp!
-      if valid_move(move)
-        accept_move(player,move)
-      else
-        request_valid_move(player,move)
+      move.chomp!('')
+      begin
+        raise "Invalid Move" unless valid_move(move)
+      rescue
+        puts "Invalid Move. Player #{player.name} Enter move again"
+        move = gets
+        submit_move(player,move)
       end
-      print_board
-      change_state(player)
+      accept_move(player,move)
     end
 
     def possible_moves
@@ -38,7 +39,7 @@ module TicTac
     end
 
     def score(move, ai, human_opponent)
-      temp_board = game_board
+      temp_board = game_board.clone
       temp_board[getMap(move)] = ai.name
       if game_won(temp_board, ai)
         score = +10
@@ -52,16 +53,15 @@ module TicTac
   private
     def getMap(move)
       case move.to_s.upcase
-        when "A1" then return 0
-        when "A2" then return 1
-        when "A3" then return 2
-        when "B1" then return 3
-        when "B2" then return 4
-        when "B3" then return 5
-        when "C1" then return 6
-        when "C2" then return 7
-        when "C3" then return 8
-        else move
+        when "A1", "0" then return 0
+        when "A2", "1" then return 1
+        when "A3", "2" then return 2
+        when "B1", "3" then return 3
+        when "B2", "4" then return 4
+        when "B3", "5" then return 5
+        when "C1", "6" then return 6
+        when "C2", "7" then return 7
+        when "C3", "8" then return 8
       end
     end
 
@@ -70,18 +70,14 @@ module TicTac
     end
 
     def valid_move(move)
-      move =~ /[ABCabc][123]/ and game_board[getMap(move)] == '-'
-    end
-
-    def request_valid_move(player,move)
-      puts "Invalid Move. Player #{player.name} Enter move again"
-      move = gets
-      submit_move(player,move)
+      move =~ /[ABCabc]*[012345678]/ && game_board[getMap(move)] == '-'
     end
 
     def accept_move(player,move)
       game_board[getMap(move)] = player.name
       puts "Player #{player.name} submitted move #{move}"
+      print_board
+      change_state(player)
     end
 
     def change_state(player)

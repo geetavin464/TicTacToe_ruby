@@ -2,7 +2,7 @@ module TicTac
   class AI < Player
 
     def play_turn(game, board)
-      board.submit_move(self, perfect_move(game,board)).to_s
+      board.submit_move(self, perfect_move(game,board).to_s)
     end
   
   private
