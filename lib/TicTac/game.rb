@@ -1,7 +1,7 @@
 require 'pry'
 module TicTac
   class Game
-    attr_accessor :mode, :board
+    attr_accessor :mode, :board, :player, :opponent
 
     def initialize
       present_title

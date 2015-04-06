@@ -29,9 +29,29 @@ module TicTac
       change_state(player)
     end
 
+    def possible_moves
+      available_moves = []
+      game_board.each_char.with_index do |e,i|
+        available_moves << i if e == "-"
+      end
+      available_moves
+    end
+
+    def score(move, ai, human_opponent)
+      temp_board = game_board
+      temp_board[getMap(move)] = ai.name
+      if game_won(temp_board, ai)
+        score = +10
+      elsif game_won(temp_board, human_opponent)
+        score = -10
+      else
+        score = 0
+      end
+    end
+
   private
     def getMap(move)
-      case move.upcase
+      case move.to_s.upcase
         when "A1" then return 0
         when "A2" then return 1
         when "A3" then return 2
@@ -41,6 +61,7 @@ module TicTac
         when "C1" then return 6
         when "C2" then return 7
         when "C3" then return 8
+        else move
       end
     end
 
@@ -64,17 +85,17 @@ module TicTac
     end
 
     def change_state(player)
-      @state = :finished  if (game_over || game_won(player))
-      @winner = player if game_won(player)
+      @state = :finished  if (game_over(game_board) || game_won(game_board, player))
+      @winner = player if game_won(game_board, player)
     end
 
-    def game_over
-      !game_board.include?('-')
+    def game_over(this_board)
+      !this_board.include?('-')
     end
 
-    def game_won(player)
+    def game_won(this_board, player)
       WINNING_COMBINATIONS.each do |alignment|
-        return true if all_equal?(game_board[alignment[0]], game_board[alignment[1]], game_board[alignment[2]], player.name)
+        return true if all_equal?(this_board[alignment[0]], this_board[alignment[1]], this_board[alignment[2]], player.name)
       end
       return false
     end
